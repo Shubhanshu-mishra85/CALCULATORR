@@ -175,7 +175,10 @@ button{
 
     cursor:pointer;
 
-    transition:0.2s;
+    transition:
+    transform 0.2s,
+    box-shadow 0.3s,
+    background 0.3s;
 
     color:white;
 }
@@ -252,6 +255,25 @@ button:active{
     letter-spacing:3px;
 }
 
+/* MOBILE */
+
+@media(max-width:500px){
+
+    .wrapper{
+        padding:25px;
+    }
+
+    .display{
+        height:100px;
+        font-size:42px;
+    }
+
+    button{
+        height:65px;
+        font-size:22px;
+    }
+}
+
 </style>
 </head>
 
@@ -306,6 +328,97 @@ button:active{
     </div>
 
 </div>
+
+<!-- JAVASCRIPT -->
+
+<script>
+
+const display = document.querySelector('.display');
+
+const buttons = document.querySelectorAll('button');
+
+let currentInput = '';
+
+buttons.forEach(button => {
+
+    button.addEventListener('click', () => {
+
+        const value = button.textContent;
+
+        // CLEAR
+        if(value === 'AC'){
+
+            currentInput = '';
+
+            display.value = '0';
+        }
+
+        // BACKSPACE
+        else if(value === '⌫'){
+
+            currentInput = currentInput.slice(0,-1);
+
+            display.value = currentInput || '0';
+        }
+
+        // PERCENT
+        else if(value === '%'){
+
+            try{
+
+                currentInput =
+                (parseFloat(currentInput)/100).toString();
+
+                display.value = currentInput;
+
+            }catch{
+
+                display.value = 'Error';
+
+                currentInput = '';
+            }
+        }
+
+        // EQUAL
+        else if(value === '='){
+
+            try{
+
+                let expression = currentInput
+                .replace(/×/g,'*')
+                .replace(/÷/g,'/')
+                .replace(/−/g,'-');
+
+                currentInput =
+                eval(expression).toString();
+
+                display.value = currentInput;
+
+            }catch{
+
+                display.value = 'Error';
+
+                currentInput = '';
+            }
+        }
+
+        // NORMAL INPUT
+        else{
+
+            if(display.value === '0'){
+                display.value = '';
+            }
+
+            currentInput += value;
+
+            display.value = currentInput;
+        }
+
+    });
+
+});
+
+</script>
 
 </body>
 </html>
